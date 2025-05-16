@@ -24,6 +24,14 @@ public class DriverInfoController {
     @Autowired
     private DriverInfoService driverInfoService;
 
+    
+
+    @Operation(summary = "获取司机认证信息")
+    @GetMapping("/getDriverAuthInfo/{driverId}")
+    public Result<DriverAuthInfoVo> getDriverAuthInfo(@PathVariable Long driverId) {
+        DriverAuthInfoVo driverAuthInfoVo = driverInfoService.getDriverAuthInfo(driverId);
+        return Result.ok(driverAuthInfoVo);
+    }
     @Operation(summary = "小程序授权登录")
     @GetMapping("/login/{code}")
     public Result<Long> login(@PathVariable String code) {
@@ -35,13 +43,6 @@ public class DriverInfoController {
     public Result<DriverLoginVo> getDriverInfo(@PathVariable Long driverId) {
         DriverLoginVo driverLoginVo = driverInfoService.getDriverInfo(driverId);
         return Result.ok(driverLoginVo);
-    }
-
-    @Operation(summary = "获取司机认证信息")
-    @GetMapping("/getDriverAuthInfo/{driverId}")
-    public Result<DriverAuthInfoVo> getDriverAuthInfo(@PathVariable Long driverId) {
-        DriverAuthInfoVo driverAuthInfoVo = driverInfoService.getDriverAuthInfo(driverId);
-        return Result.ok(driverAuthInfoVo);
     }
 
     //更新司机认证信息
@@ -65,6 +66,11 @@ public class DriverInfoController {
     public Result<DriverSet> getDriverSet(@PathVariable Long driverId) {
         return Result.ok(driverInfoService.getDriverSet(driverId));
     }
+     @Operation(summary = "验证司机人脸")
+    @PostMapping("/verifyDriverFace")
+    public Result<Boolean> verifyDriverFace(@RequestBody DriverFaceModelForm driverFaceModelForm) {
+        return Result.ok(driverInfoService.verifyDriverFace(driverFaceModelForm));
+    }
 
     @Operation(summary = "判断司机当日是否进行过人脸识别")
     @GetMapping("/isFaceRecognition/{driverId}")
@@ -72,11 +78,7 @@ public class DriverInfoController {
         return Result.ok(driverInfoService.isFaceRecognition(driverId));
     }
 
-    @Operation(summary = "验证司机人脸")
-    @PostMapping("/verifyDriverFace")
-    public Result<Boolean> verifyDriverFace(@RequestBody DriverFaceModelForm driverFaceModelForm) {
-        return Result.ok(driverInfoService.verifyDriverFace(driverFaceModelForm));
-    }
+   
 
     //更新接单状态
     @Operation(summary = "更新接单状态")
