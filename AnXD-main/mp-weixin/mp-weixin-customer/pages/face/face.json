@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "情绪检测",
+  "usingComponents": {
+    "tabbar-nav": "../../components/tabbar-nav/tabbar-nav",
+    "tm-app": "../../tmui/components/tm-app/tm-app",
+    "tm-text": "/tmui/components/tm-text/tm-text",
+    "tm-button": "/tmui/components/tm-button/tm-button"
+  }
+}

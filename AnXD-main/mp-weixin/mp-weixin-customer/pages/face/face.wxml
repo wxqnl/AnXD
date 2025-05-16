@@ -1,0 +1,110 @@
+<!-- <tm-app class="page-container" u-s="{{['d']}}" u-i="emotion-app" bind:__l="__l"> -->
+  <!-- 标题 -->
+  <!-- <view class="header flex flex-col flex-center">
+    <tm-text
+      u-i="emotion-header"
+      bind:__l="__l"
+      u-p="{{headerText}}"
+      _class="font-bold"
+      font-size="36"
+    ></tm-text>
+  </view> -->
+
+  <!-- 输入区域 -->
+  <!-- <view class="input-section flex flex-col">
+    <tm-text
+      u-i="emotion-prompt"
+      bind:__l="__l"
+      u-p="{{promptText}}"
+      _class="opacity-7 mb-10"
+      font-size="28"
+    ></tm-text>
+    <textarea
+      class="input-textarea"
+      placeholder="请输入你的感受"
+      value="{{userInput}}"
+      bind:input="updateInput"
+    ></textarea>
+  </view> -->
+
+  <!-- 提交按钮 -->
+  <!-- <view class="button-section flex flex-col flex-center">
+    <tm-button
+      u-i="emotion-submit"
+      bind:__l="__l"
+      bindclick="submitEmotion"
+      u-p="{{submitButton}}"
+      _class="submit-button"
+      color="blue"
+      linear="right"
+      linear-deep="accent"
+      block
+      height="80"
+      font-size="30"
+    ></tm-button>
+  </view> -->
+
+  <!-- 结果展示框 -->
+  <!-- <view class="result-section flex flex-col">
+    <view class="result-card">
+      <tm-text
+        u-i="emotion-result-emotion"
+        bind:__l="__l"
+        u-p="{{resultText}}"
+        _class="result-text"
+        font-size="32"
+      ></tm-text>
+      <tm-text
+        u-i="emotion-result-time"
+        bind:__l="__l"
+        u-p="{{detectionTime}}"
+        _class="result-time"
+        font-size="28"
+      ></tm-text>
+    </view> -->
+    <!-- 反馈按钮 -->
+    <!-- <tm-text
+        u-i="emotion-result-emotion"
+        bind:__l="__l"
+        u-p="{{resultText}}"
+        _class="result-text"
+        font-size="32"
+      ></tm-text><tm-button
+      u-i="emotion-feedback"
+      bind:__l="__l"
+      bindclick="submitFeedback"
+      u-p="{{feedbackButton}}"
+      _class="feedback-button"
+      color="grey"
+      height="60"
+      font-size="28"
+    ></tm-button>
+  </view> -->
+
+  <!-- 底部导航栏（从优惠券页面复制） -->
+  <!-- <tabbar-nav u-i="2204acec-9,emotion-app" bind:__l="__l"></tabbar-nav>
+</tm-app> -->
+
+
+<tm-app class="page-container" u-s="{{['d']}}" u-i="emotion-app" bind:__l="__l">
+  <view class="container">
+  <!-- 情绪识别结果框 -->
+  <view class="result-box">
+    <text class="emotion-text">检测结果：{{ emotion }}</text>
+    <text class="time-text">识别时间：{{ time }}</text>
+  </view>
+
+  <!-- 反馈按钮 -->
+  <button class="feedback-button" bindtap="openFeedback">结果反馈</button>
+
+  <!-- 弹出反馈输入框 -->
+  <view wx:if="{{ showFeedback }}" class="feedback-popup">
+    <textarea class="feedback-input" placeholder="请输入反馈内容..." model:value="{{ feedbackContent }}" />
+    <view class="popup-buttons">
+      <button bindtap="submitFeedback">提交</button>
+      <button bindtap="cancelFeedback">取消</button>
+    </view>
+  </view>
+</view>
+<tabbar-nav u-i="2204acec-9,emotion-app" bind:__l="__l"></tabbar-nav>
+</tm-app>

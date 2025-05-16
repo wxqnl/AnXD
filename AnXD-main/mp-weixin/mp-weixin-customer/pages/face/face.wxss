@@ -1,0 +1,155 @@
+/* .page-container {
+  padding: 0 20rpx 120rpx 20rpx; 底部留空间给 tabbar-nav */
+  /* background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.header {
+  margin: 40rpx 0;
+}
+
+.font-bold {
+  font-weight: bold;
+  color: #333;
+}
+
+.input-section {
+  margin-bottom: 40rpx;
+}
+
+.opacity-7 {
+  opacity: 0.7;
+}
+
+.mb-10 {
+  margin-bottom: 20rpx;
+}
+
+.input-textarea {
+  width: 100%;
+  height: 200rpx;
+  padding: 20rpx;
+  background-color: #fff;
+  border: 2rpx solid #ddd;
+  border-radius: 10rpx;
+  font-size: 30rpx;
+}
+
+.button-section {
+  margin-bottom: 40rpx;
+}
+
+.submit-button {
+  width: 100%;
+}
+
+.result-section {
+  margin-top: 20rpx;
+}
+
+.result-card {
+  padding: 30rpx;
+  background-color: #fff;
+  border-radius: 10rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.result-text {
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.result-time {
+  color: #666;
+}
+
+.feedback-button {
+  margin-top: 20rpx;
+  width: 100%;
+} */
+
+/* 占位样式，实际由 tabbar-nav 组件定义 */
+.tabbar-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  background-color: #ffffff;
+  border-top: 2rpx solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.container {
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.result-box {
+  width: 90%;
+  background-color: #f5f5f5;
+  padding: 40rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40rpx;
+}
+
+.emotion-text {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.time-text {
+  font-size: 28rpx;
+  color: #888;
+  display: block; /* 强制换行 */
+  margin-top: 20rpx;
+}
+
+
+.feedback-button {
+  background-color: #007aff;
+  color: white;
+  width: 200rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  border-radius: 10rpx;
+}
+
+.feedback-popup {
+  margin-top: 40rpx;
+  width: 90%;
+  background-color: #fff;
+  border: 2rpx solid #ccc;
+  padding: 30rpx;
+  border-radius: 20rpx;
+}
+
+.feedback-input {
+  width: 94%;
+  height: 200rpx;
+  border: 1rpx solid #ccc;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+
+.popup-buttons button {
+  width: 45%;
+  background-color: #007aff;
+  color: white;
+  border-radius: 10rpx;
+}
+
