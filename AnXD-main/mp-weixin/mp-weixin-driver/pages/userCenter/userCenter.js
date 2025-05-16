@@ -37,6 +37,12 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "userCenter",
   setup(__props) {
     const useUser = store_modules_user.useUserStore();
+    
+    // 存储抓拍图片路径
+    const photoPath = common_vendor.ref('');
+    // 定时器 ID
+    let captureInterval;
+
     const navList = common_vendor.ref([
       {
         name: "我的订单",
@@ -63,6 +69,94 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         });
       }
     }
+    
+    // 启动定时抓拍
+    function startAutoCapture() {
+      captureInterval = setInterval(() => {
+        takePhoto(); // 每10秒抓拍一次
+      }, 30000);
+    }
+
+    // 停止定时抓拍
+    function stopAutoCapture() {
+      clearInterval(captureInterval);
+    }
+
+    function takePhoto() {
+      const cameraContext = common_vendor.index.createCameraContext(); // 获取相机上下文
+      cameraContext.takePhoto({
+        quality: 'high', // 高质量图片
+        success: (res) => {
+          // 拍照成功，获取临时文件路径
+          photoPath.value = res.tempImagePath; // 存储照片路径
+          console.log('拍照成功', res.tempImagePath);
+          // 上传图片到后端接口
+          //uploadImageToServer(res.tempImagePath);
+        
+        },
+        fail: (err) => {
+          // 拍照失败
+          console.error('拍照失败', err);
+          common_vendor.index.showToast({
+            title: '拍照失败',
+            icon: 'error',
+          });
+        }
+      });
+    }
+     // 上传图片到后端接口
+     function uploadImageToServer(imagePath) {
+      common_vendor.index.uploadFile({
+        url: 'http://localhost:8600/driver-api/cos/uploadImage', // 后端接口
+        filePath: imagePath, // 临时文件路径
+        name: 'file', // 后端接口参数名
+        formData: {
+          orderId: '1', // 订单ID
+        },
+        success: (res) => {
+          if (res.statusCode === 200) {
+            const data = JSON.parse(res.data);
+            console.log('上传成功，图片 URL:', data.data);
+            common_vendor.index.showToast({
+              title: '图片上传成功',
+              icon: 'success',
+            });
+          } else {
+            console.error('上传失败', res);
+            common_vendor.index.showToast({
+              title: '上传失败',
+              icon: 'error',
+            });
+          }
+        },
+        fail: (err) => {
+          console.error('上传失败', err);
+          common_vendor.index.showToast({
+            title: '上传失败',
+            icon: 'error',
+          });
+        }
+      });
+    }
+
+    // 摄像头错误处理
+    function onCameraError(e) {
+      console.error('摄像头错误:', e);
+      common_vendor.index.showToast({
+        title: '摄像头错误',
+        icon: 'error',
+      });
+    }
+
+    // 页面加载时启动自动抓拍
+    common_vendor.onShow(() => {
+      startAutoCapture(); // 启动定时抓拍
+    });
+
+    // 页面卸载时停止抓拍
+    common_vendor.onUnload(() => {
+      stopAutoCapture(); // 清除定时器
+    });
     function goLogin() {
       common_vendor.index.navigateTo({
         url: "/pages/login/login"
@@ -80,6 +174,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           round: 25,
           src: common_vendor.unref(useUser).user.avatarUrl || "https://p26-passport.byteacctimg.com/img/user-avatar/39dc370feeaaddfc5dfda471b23de255~50x50.awebp"
         }),
+        
         b: common_vendor.p({
           ["font-size"]: 50,
           label: common_vendor.unref(useUser).user.nickname || "未登录"
@@ -125,5 +220,5 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
   }
 });
-const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-a21a4d8b"], ["__file", "D:/work/daijia_work/web/mp-weixin-driver/src/pages/userCenter/userCenter.vue"]]);
+const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-a21a4d8b"], ["__file", "D:/work/daijia_work/web/mp-weixin-customer/src/pages/userCenter/userCenter.vue"]]);
 wx.createPage(MiniProgramPage);

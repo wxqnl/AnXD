@@ -112,12 +112,83 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         console.log("开始服务-startServiceHandle");
         yield takeCarInfo.updateLocation(2);
         yield api_order_index.startOrderServiceByDriver(takeCarInfo.orderInfo.orderId);
+        startAutoCapture();  // 启动定时抓拍
       });
     }
+    let captureInterval;  // 定时器ID
+
+function startAutoCapture() {
+  captureInterval = setInterval(() => {
+    takePhoto(); // 每30秒抓拍一次
+  }, 30000); // 30秒
+}
+function takePhoto() {
+  const cameraContext = common_vendor.index.createCameraContext(); // 获取相机上下文
+  cameraContext.takePhoto({
+    quality: 'high', // 高质量图片
+    success: (res) => {
+      // 拍照成功，获取临时文件路径
+      const photoPath = res.tempImagePath; // 存储照片路径
+      console.log('拍照成功', photoPath);
+
+      // 上传图片到后端接口
+      uploadImageToServer(photoPath);
+    },
+    fail: (err) => {
+      // 拍照失败
+      console.error('拍照失败', err);
+      common_vendor.index.showToast({
+        title: '拍照失败',
+        icon: 'error',
+      });
+    }
+  });
+}
+
+function uploadImageToServer(imagePath) {//jia
+  // 确保 takeCarInfo.orderInfo.orderId 已经有值
+  const orderId = takeCarInfo.orderInfo.orderId;
+  common_vendor.index.uploadFile({
+    url: 'http://localhost:8600/driver-api/cos/uploadImage', // 后端接口
+    filePath: imagePath, // 临时文件路径
+    name: 'file', // 后端接口参数名
+    formData: {
+      orderId: orderId, // 订单ID
+    },
+    success: (res) => {
+      if (res.statusCode === 200) {
+        const data = JSON.parse(res.data);
+        console.log('上传成功，图片 URL:', data.data);
+        common_vendor.index.showToast({
+          title: '图片上传成功',
+          icon: 'success',
+        });
+      } else {
+        console.error('上传失败', res);
+        common_vendor.index.showToast({
+          title: '上传失败',
+          icon: 'error',
+        });
+      }
+    },
+    fail: (err) => {
+      console.error('上传失败', err);
+      common_vendor.index.showToast({
+        title: '上传失败',
+        icon: 'error',
+      });
+    }
+  });
+}
+
+function stopAutoCapture() {
+  clearInterval(captureInterval); // 清除定时器，停止抓拍
+}
     function reachTheEndingPointHandle() {
       console.log("到达乘客终点-reachTheEndingPointHandle");
       takeCarInfo.stopQueryOrderStatus();
       takeCarInfo.stopQuerySendRecord();
+      stopAutoCapture();  // 停止定时抓拍jia
       common_vendor.index.redirectTo({
         url: `/pages/orderDetail/orderDetail?orderId=${takeCarInfo.orderInfo.orderId}`
       });
