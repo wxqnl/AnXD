@@ -20,7 +20,14 @@ public class CustomerInfoController {
 	private CustomerInfoService customerInfoService;
 
 
-	@Operation(summary = "获取客户登录信息")
+
+
+	@Operation(summary = "获取客户OpenId")
+	@GetMapping("/getCustomerOpenId/{customerId}")
+	public Result<String> getCustomerOpenId(@PathVariable Long customerId) {
+		return Result.ok(customerInfoService.getCustomerOpenId(customerId));
+	}
+		@Operation(summary = "获取客户登录信息")
 	@GetMapping("/getCustomerLoginInfo/{customerId}")
 	public Result<CustomerLoginVo> getCustomerLoginInfo(@PathVariable Long customerId) {
 		CustomerLoginVo customerLoginVo = customerInfoService.getCustomerInfo(customerId);
@@ -38,12 +45,6 @@ public class CustomerInfoController {
 	@PostMapping("/updateWxPhoneNumber")
 	public Result<Boolean> updateWxPhoneNumber(@RequestBody UpdateWxPhoneForm updateWxPhoneForm) {
 		return Result.ok(customerInfoService.updateWxPhoneNumber(updateWxPhoneForm));
-	}
-
-	@Operation(summary = "获取客户OpenId")
-	@GetMapping("/getCustomerOpenId/{customerId}")
-	public Result<String> getCustomerOpenId(@PathVariable Long customerId) {
-		return Result.ok(customerInfoService.getCustomerOpenId(customerId));
 	}
 }
 

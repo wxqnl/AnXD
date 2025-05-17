@@ -77,27 +77,7 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
         return customerInfo.getId();
     }
 
-    //获取客户登录信息
-    @Override
-    public CustomerLoginVo getCustomerInfo(Long customerId) {
-        //1 根据用户id查询用户信息
-        CustomerInfo customerInfo = customerInfoMapper.selectById(customerId);
-
-        //2 封装到CustomerLoginVo
-        CustomerLoginVo customerLoginVo = new CustomerLoginVo();
-        //customerLoginVo.setNickname(customerInfo.getNickname());
-        BeanUtils.copyProperties(customerInfo,customerLoginVo);
-
-        //@Schema(description = "是否绑定手机号码")
-        //    private Boolean isBindPhone;
-        String phone = customerInfo.getPhone();
-        boolean isBindPhone = StringUtils.hasText(phone);
-        customerLoginVo.setIsBindPhone(isBindPhone);
-
-        //3 CustomerLoginVo返回
-        return customerLoginVo;
-    }
-
+    
     ////更新客户微信手机号码
     @Override
     public Boolean updateWxPhoneNumber(UpdateWxPhoneForm updateWxPhoneForm) {
@@ -117,6 +97,26 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
         } catch (WxErrorException e) {
             throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         }
+    }
+//获取客户登录信息
+    @Override
+    public CustomerLoginVo getCustomerInfo(Long customerId) {
+        //1 根据用户id查询用户信息
+        CustomerInfo customerInfo = customerInfoMapper.selectById(customerId);
+
+        //2 封装到CustomerLoginVo
+        CustomerLoginVo customerLoginVo = new CustomerLoginVo();
+        //customerLoginVo.setNickname(customerInfo.getNickname());
+        BeanUtils.copyProperties(customerInfo,customerLoginVo);
+
+        //@Schema(description = "是否绑定手机号码")
+        //    private Boolean isBindPhone;
+        String phone = customerInfo.getPhone();
+        boolean isBindPhone = StringUtils.hasText(phone);
+        customerLoginVo.setIsBindPhone(isBindPhone);
+
+        //3 CustomerLoginVo返回
+        return customerLoginVo;
     }
 
     @Override
