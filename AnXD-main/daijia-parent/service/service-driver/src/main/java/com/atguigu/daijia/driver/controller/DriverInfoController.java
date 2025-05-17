@@ -26,7 +26,16 @@ public class DriverInfoController {
 
     
 
-    @Operation(summary = "获取司机认证信息")
+  
+
+    //更新司机认证信息
+    @Operation(summary = "更新司机认证信息")
+    @PostMapping("/updateDriverAuthInfo")
+    public Result<Boolean> updateDriverAuthInfo(@RequestBody UpdateDriverAuthInfoForm updateDriverAuthInfoForm) {
+        Boolean isSuccess = driverInfoService.updateDriverAuthInfo(updateDriverAuthInfoForm);
+        return Result.ok(isSuccess);
+    }
+      @Operation(summary = "获取司机认证信息")
     @GetMapping("/getDriverAuthInfo/{driverId}")
     public Result<DriverAuthInfoVo> getDriverAuthInfo(@PathVariable Long driverId) {
         DriverAuthInfoVo driverAuthInfoVo = driverInfoService.getDriverAuthInfo(driverId);
@@ -43,14 +52,6 @@ public class DriverInfoController {
     public Result<DriverLoginVo> getDriverInfo(@PathVariable Long driverId) {
         DriverLoginVo driverLoginVo = driverInfoService.getDriverInfo(driverId);
         return Result.ok(driverLoginVo);
-    }
-
-    //更新司机认证信息
-    @Operation(summary = "更新司机认证信息")
-    @PostMapping("/updateDriverAuthInfo")
-    public Result<Boolean> updateDriverAuthInfo(@RequestBody UpdateDriverAuthInfoForm updateDriverAuthInfoForm) {
-        Boolean isSuccess = driverInfoService.updateDriverAuthInfo(updateDriverAuthInfoForm);
-        return Result.ok(isSuccess);
     }
 
     //创建司机人脸模型
