@@ -463,38 +463,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return orderRewardVo;
     }
 
-    //调用方法取消订单
-    @Override
-    public void orderCancel(long orderId) {
-        //orderId查询订单信息
-        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
-        //判断
-        if(orderInfo.getStatus()==OrderStatus.WAITING_ACCEPT.getStatus()) {
-            //修改订单状态：取消状态
-            orderInfo.setStatus(OrderStatus.CANCEL_ORDER.getStatus());
-            int rows = orderInfoMapper.updateById(orderInfo);
-            if(rows == 1) {
-                //删除接单标识
-
-                redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK);
-            }
-        }
-    }
-
-    @Override
-    public Boolean updateCouponAmount(Long orderId, BigDecimal couponAmount) {
-        orderBillMapper.updateCouponAmount(orderId,couponAmount);
-        return true;
-    }
-
-
-    public void log(Long orderId, Integer status) {
-        OrderStatusLog orderStatusLog = new OrderStatusLog();
-        orderStatusLog.setOrderId(orderId);
-        orderStatusLog.setOrderStatus(status);
-        orderStatusLog.setOperateTime(new Date());
-        orderStatusLogMapper.insert(orderStatusLog);
-    }
+   
 
 
     //司机抢单：乐观锁方案解决并发问题
@@ -528,5 +497,37 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         //删除抢单标识
         redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK);
         return true;
+    }
+     //调用方法取消订单
+    @Override
+    public void orderCancel(long orderId) {
+        //orderId查询订单信息
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        //判断
+        if(orderInfo.getStatus()==OrderStatus.WAITING_ACCEPT.getStatus()) {
+            //修改订单状态：取消状态
+            orderInfo.setStatus(OrderStatus.CANCEL_ORDER.getStatus());
+            int rows = orderInfoMapper.updateById(orderInfo);
+            if(rows == 1) {
+                //删除接单标识
+
+                redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK);
+            }
+        }
+    }
+
+    @Override
+    public Boolean updateCouponAmount(Long orderId, BigDecimal couponAmount) {
+        orderBillMapper.updateCouponAmount(orderId,couponAmount);
+        return true;
+    }
+
+
+    public void log(Long orderId, Integer status) {
+        OrderStatusLog orderStatusLog = new OrderStatusLog();
+        orderStatusLog.setOrderId(orderId);
+        orderStatusLog.setOrderStatus(status);
+        orderStatusLog.setOperateTime(new Date());
+        orderStatusLogMapper.insert(orderStatusLog);
     }
 }
