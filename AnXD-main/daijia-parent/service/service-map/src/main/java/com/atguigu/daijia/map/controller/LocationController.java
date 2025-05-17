@@ -37,19 +37,7 @@ public class LocationController {
         return Result.ok(flag);
     }
 
-    //司机关闭接单，删除司机位置信息
-    @Operation(summary = "关闭接单服务：删除司机经纬度位置")
-    @DeleteMapping("/removeDriverLocation/{driverId}")
-    public Result<Boolean> removeDriverLocation(@PathVariable Long driverId) {
-        return Result.ok(locationService.removeDriverLocation(driverId));
-    }
-
-    @Operation(summary = "搜索附近满足条件的司机")
-    @PostMapping("/searchNearByDriver")
-    public Result<List<NearByDriverVo>> searchNearByDriver(@RequestBody
-                                                               SearchNearByDriverForm searchNearByDriverForm) {
-        return Result.ok(locationService.searchNearByDriver(searchNearByDriverForm));
-    }
+ 
 
     @Operation(summary = "司机赶往代驾起始点：更新订单地址到缓存")
     @PostMapping("/updateOrderLocationToCache")
@@ -61,6 +49,19 @@ public class LocationController {
     @GetMapping("/getCacheOrderLocation/{orderId}")
     public Result<OrderLocationVo> getCacheOrderLocation(@PathVariable Long orderId) {
         return Result.ok(locationService.getCacheOrderLocation(orderId));
+    }
+       //司机关闭接单，删除司机位置信息
+    @Operation(summary = "关闭接单服务：删除司机经纬度位置")
+    @DeleteMapping("/removeDriverLocation/{driverId}")
+    public Result<Boolean> removeDriverLocation(@PathVariable Long driverId) {
+        return Result.ok(locationService.removeDriverLocation(driverId));
+    }
+
+    @Operation(summary = "搜索附近满足条件的司机")
+    @PostMapping("/searchNearByDriver")
+    public Result<List<NearByDriverVo>> searchNearByDriver(@RequestBody
+                                                               SearchNearByDriverForm searchNearByDriverForm) {
+        return Result.ok(locationService.searchNearByDriver(searchNearByDriverForm));
     }
 
     //批量保存代驾服务订单位置

@@ -59,25 +59,7 @@ public class LocationServiceImpl implements LocationService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    //更新司机位置信息
-    @Override
-    public Boolean updateDriverLocation(UpdateDriverLocationForm updateDriverLocationForm) {
-        //把司机位置信息添加redis里面geo
-        Point point = new Point(updateDriverLocationForm.getLongitude().doubleValue(),
-                                updateDriverLocationForm.getLatitude().doubleValue());
-        //添加到redis里面
-        redisTemplate.opsForGeo().add(RedisConstant.DRIVER_GEO_LOCATION,
-                                      point,
-                                      updateDriverLocationForm.getDriverId().toString());
-        return true;
-    }
-
-    //删除司机位置信息
-    @Override
-    public Boolean removeDriverLocation(Long driverId) {
-        redisTemplate.opsForGeo().remove(RedisConstant.DRIVER_GEO_LOCATION,driverId.toString());
-        return true;
-    }
+   
 
     //搜索附近满足条件的司机
     @Override
@@ -156,6 +138,25 @@ public class LocationServiceImpl implements LocationService {
 
         }
         return list;
+    }
+ //更新司机位置信息
+    @Override
+    public Boolean updateDriverLocation(UpdateDriverLocationForm updateDriverLocationForm) {
+        //把司机位置信息添加redis里面geo
+        Point point = new Point(updateDriverLocationForm.getLongitude().doubleValue(),
+                                updateDriverLocationForm.getLatitude().doubleValue());
+        //添加到redis里面
+        redisTemplate.opsForGeo().add(RedisConstant.DRIVER_GEO_LOCATION,
+                                      point,
+                                      updateDriverLocationForm.getDriverId().toString());
+        return true;
+    }
+
+    //删除司机位置信息
+    @Override
+    public Boolean removeDriverLocation(Long driverId) {
+        redisTemplate.opsForGeo().remove(RedisConstant.DRIVER_GEO_LOCATION,driverId.toString());
+        return true;
     }
 
     //司机赶往代驾起始点：更新订单地址到缓存
