@@ -120,6 +120,28 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         return true;
     }
 
+        //3.3 折扣卷
+        //判断折扣卷是否满足条件
+        List<NoUseCouponVo> typeList2 =
+                list.stream().filter(item -> item.getCouponType() == 2).collect(Collectors.toList());
+        for (NoUseCouponVo noUseCouponVo : typeList2) {
+            //折扣之后金额
+            // 100 打8折  = 100 * 8 /10= 80
+            BigDecimal discountAmount = orderAmount.multiply(noUseCouponVo.getDiscount())
+                    .divide(new BigDecimal("10")).setScale(2, RoundingMode.HALF_UP);
+
+            BigDecimal reduceAmount = orderAmount.subtract(discountAmount);
+            //2.2.1.没门槛
+            if (noUseCouponVo.getConditionAmount().doubleValue() == 0) {
+                availableCouponVoList.add(this.buildBestNoUseCouponVo(noUseCouponVo, reduceAmount));
+            }
+            //2.2.2.有门槛，订单折扣后金额大于优惠券门槛金额
+            if (noUseCouponVo.getConditionAmount().doubleValue() > 0
+                    && discountAmount.subtract(noUseCouponVo.getConditionAmount()).doubleValue() > 0) {
+                availableCouponVoList.add(this.buildBestNoUseCouponVo(noUseCouponVo, reduceAmount));
+            }
+        }
+
     //获取未使用的最佳优惠卷信息
     @Override
     public List<AvailableCouponVo> findAvailableCoupon(Long customerId, BigDecimal orderAmount) {
@@ -155,28 +177,6 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
             }
         }
 
-        //3.3 折扣卷
-        //判断折扣卷是否满足条件
-        List<NoUseCouponVo> typeList2 =
-                list.stream().filter(item -> item.getCouponType() == 2).collect(Collectors.toList());
-        for (NoUseCouponVo noUseCouponVo : typeList2) {
-            //折扣之后金额
-            // 100 打8折  = 100 * 8 /10= 80
-            BigDecimal discountAmount = orderAmount.multiply(noUseCouponVo.getDiscount())
-                    .divide(new BigDecimal("10")).setScale(2, RoundingMode.HALF_UP);
-
-            BigDecimal reduceAmount = orderAmount.subtract(discountAmount);
-            //2.2.1.没门槛
-            if (noUseCouponVo.getConditionAmount().doubleValue() == 0) {
-                availableCouponVoList.add(this.buildBestNoUseCouponVo(noUseCouponVo, reduceAmount));
-            }
-            //2.2.2.有门槛，订单折扣后金额大于优惠券门槛金额
-            if (noUseCouponVo.getConditionAmount().doubleValue() > 0
-                    && discountAmount.subtract(noUseCouponVo.getConditionAmount()).doubleValue() > 0) {
-                availableCouponVoList.add(this.buildBestNoUseCouponVo(noUseCouponVo, reduceAmount));
-            }
-        }
-
         //4 把满足条件优惠卷放到最终list集合
         //根据金额排序
         if (!CollectionUtils.isEmpty(availableCouponVoList)) {
@@ -191,26 +191,7 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         return availableCouponVoList;
     }
 
-    //使用优惠卷
-    @Override
-    public BigDecimal useCoupon(UseCouponForm useCouponForm) {
-        //1 根据乘客优惠券id获取乘客优惠卷信息
-        CustomerCoupon customerCoupon =
-                customerCouponMapper.selectById(useCouponForm.getCustomerCouponId());
-        if(customerCoupon == null) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
-        }
-        //2 根据优惠卷id获取优惠卷信息
-        CouponInfo couponInfo =
-                couponInfoMapper.selectById(customerCoupon.getCouponId());
-        if(couponInfo == null) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
-        }
-
-        //3 判断优惠卷是否是当前乘客所持有的
-        if(customerCoupon.getCustomerId() != useCouponForm.getCustomerId()) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
-        }
+   
 
         //4 判断是否具备优惠卷使用条件
         //现金和折扣卷，根据使用门槛判断
@@ -264,6 +245,29 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         }
         return null;
     }
+     //使用优惠卷
+    @Override
+    public BigDecimal useCoupon(UseCouponForm useCouponForm) {
+        //1 根据乘客优惠券id获取乘客优惠卷信息
+        CustomerCoupon customerCoupon =
+                customerCouponMapper.selectById(useCouponForm.getCustomerCouponId());
+        if(customerCoupon == null) {
+            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        }
+        //2 根据优惠卷id获取优惠卷信息
+        CouponInfo couponInfo =
+                couponInfoMapper.selectById(customerCoupon.getCouponId());
+        if(couponInfo == null) {
+            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        }
+
+        //3 判断优惠卷是否是当前乘客所持有的
+        if(customerCoupon.getCustomerId() != useCouponForm.getCustomerId()) {
+            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        }
+
+
+
 
     private AvailableCouponVo buildBestNoUseCouponVo(NoUseCouponVo noUseCouponVo, BigDecimal reduceAmount) {
         AvailableCouponVo bestNoUseCouponVo = new AvailableCouponVo();
