@@ -80,13 +80,37 @@ public class CosServiceImpl implements CosService {
         //返回vo对象
         CosUploadVo cosUploadVo = new CosUploadVo();
         cosUploadVo.setUrl(uploadPath);
+        
         //图片临时访问url，回显使用
         String imageUrl = this.getImageUrl(uploadPath);
         cosUploadVo.setShowUrl(imageUrl);
         return cosUploadVo;
     }
 
-    public COSClient getCosClient() {
+   
+
+    //获取临时签名URL
+    @Override
+    public String getImageUrl(String path) {
+        if(!StringUtils.hasText(path)) return "";
+        //获取cosclient对象
+
+        COSClient cosClient = this.getCosClient();
+
+        //GeneratePresignedUrlRequest
+        GeneratePresignedUrlRequest request =
+                new GeneratePresignedUrlRequest(tencentCloudProperties.getBucketPrivate(),
+                         path, HttpMethodName.GET);
+
+        //设置临时URL有效期为15分钟
+        Date date = new DateTime().plusMinutes(15).toDate();
+        request.setExpiration(date);
+        //调用方法获取
+        URL url = cosClient.generatePresignedUrl(request);
+        cosClient.shutdown();
+        return url.toString();
+    }
+     public COSClient getCosClient() {
         String secretId = tencentCloudProperties.getSecretId();
         String secretKey = tencentCloudProperties.getSecretKey();
         COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
@@ -98,24 +122,5 @@ public class CosServiceImpl implements CosService {
         // 3 生成 cos 客户端。
         COSClient cosClient = new COSClient(cred, clientConfig);
         return cosClient;
-    }
-
-    //获取临时签名URL
-    @Override
-    public String getImageUrl(String path) {
-        if(!StringUtils.hasText(path)) return "";
-        //获取cosclient对象
-        COSClient cosClient = this.getCosClient();
-        //GeneratePresignedUrlRequest
-        GeneratePresignedUrlRequest request =
-                new GeneratePresignedUrlRequest(tencentCloudProperties.getBucketPrivate(),
-                         path, HttpMethodName.GET);
-        //设置临时URL有效期为15分钟
-        Date date = new DateTime().plusMinutes(15).toDate();
-        request.setExpiration(date);
-        //调用方法获取
-        URL url = cosClient.generatePresignedUrl(request);
-        cosClient.shutdown();
-        return url.toString();
     }
 }
