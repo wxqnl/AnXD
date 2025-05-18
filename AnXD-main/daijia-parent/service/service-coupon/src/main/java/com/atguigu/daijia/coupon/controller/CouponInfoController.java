@@ -47,7 +47,14 @@ public class CouponInfoController {
         return Result.ok(pageVo);
     }
 
-    @Operation(summary = "查询未使用优惠券分页列表")
+  
+
+    @Operation(summary = "获取未使用的最佳优惠券信息")
+    @GetMapping("/findAvailableCoupon/{customerId}/{orderAmount}")
+    public Result<List<AvailableCouponVo>> findAvailableCoupon(@PathVariable Long customerId, @PathVariable BigDecimal orderAmount) {
+        return Result.ok(couponInfoService.findAvailableCoupon(customerId, orderAmount));
+    }
+  @Operation(summary = "查询未使用优惠券分页列表")
     @GetMapping("findNoUsePage/{customerId}/{page}/{limit}")
     public Result<PageVo<NoUseCouponVo>> findNoUsePage(
             @Parameter(name = "customerId", description = "乘客id", required = true)
@@ -69,12 +76,6 @@ public class CouponInfoController {
     @GetMapping("/receive/{customerId}/{couponId}")
     public Result<Boolean> receive(@PathVariable Long customerId, @PathVariable Long couponId) {
         return Result.ok(couponInfoService.receive(customerId, couponId));
-    }
-
-    @Operation(summary = "获取未使用的最佳优惠券信息")
-    @GetMapping("/findAvailableCoupon/{customerId}/{orderAmount}")
-    public Result<List<AvailableCouponVo>> findAvailableCoupon(@PathVariable Long customerId, @PathVariable BigDecimal orderAmount) {
-        return Result.ok(couponInfoService.findAvailableCoupon(customerId, orderAmount));
     }
 
     @Operation(summary = "使用优惠券")
