@@ -144,7 +144,13 @@ public class NewOrderServiceImpl implements NewOrderService {
             }
         });
     }
-
+ //清空队列数据
+    @Override
+    public Boolean clearNewOrderQueueData(Long driverId) {
+        String key = RedisConstant.DRIVER_ORDER_TEMP_LIST + driverId;
+        redisTemplate.delete(key);
+        return true;
+    }
     //获取最新订单
     @Override
     public List<NewOrderDataVo> findNewOrderQueueData(Long driverId) {
@@ -159,24 +165,8 @@ public class NewOrderServiceImpl implements NewOrderService {
             }
         }
         return list;
-//        List<NewOrderDataVo> list = new ArrayList<>();
-//        String key = RedisConstant.DRIVER_ORDER_TEMP_LIST + driverId;
-//        Long size = redisTemplate.opsForList().size(key);
-//        if(size > 0) {
-//            for (int i = 0; i < size; i++) {
-//                String content = (String)redisTemplate.opsForList().leftPop(key);
-//                NewOrderDataVo newOrderDataVo = JSONObject.parseObject(content,NewOrderDataVo.class);
-//                list.add(newOrderDataVo);
-//            }
-//        }
-//        return list;
+
     }
 
-    //清空队列数据
-    @Override
-    public Boolean clearNewOrderQueueData(Long driverId) {
-        String key = RedisConstant.DRIVER_ORDER_TEMP_LIST + driverId;
-        redisTemplate.delete(key);
-        return true;
-    }
+   
 }

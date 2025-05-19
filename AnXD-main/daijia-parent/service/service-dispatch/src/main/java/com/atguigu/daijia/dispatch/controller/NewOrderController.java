@@ -22,7 +22,14 @@ public class NewOrderController {
     @Autowired
     private NewOrderService newOrderService;
 
-    //创建并启动任务调度方法
+  
+
+    @Operation(summary = "清空新订单队列数据")
+    @GetMapping("/clearNewOrderQueueData/{driverId}")
+    public Result<Boolean> clearNewOrderQueueData(@PathVariable Long driverId) {
+        return Result.ok(newOrderService.clearNewOrderQueueData(driverId));
+    }
+      //创建并启动任务调度方法
     @Operation(summary = "添加并开始新订单任务调度")
     @PostMapping("/addAndStartTask")
     public Result<Long> addAndStartTask(@RequestBody NewOrderTaskVo newOrderTaskVo) {
@@ -34,12 +41,6 @@ public class NewOrderController {
     @GetMapping("/findNewOrderQueueData/{driverId}")
     public Result<List<NewOrderDataVo>> findNewOrderQueueData(@PathVariable Long driverId) {
         return Result.ok(newOrderService.findNewOrderQueueData(driverId));
-    }
-
-    @Operation(summary = "清空新订单队列数据")
-    @GetMapping("/clearNewOrderQueueData/{driverId}")
-    public Result<Boolean> clearNewOrderQueueData(@PathVariable Long driverId) {
-        return Result.ok(newOrderService.clearNewOrderQueueData(driverId));
     }
 }
 
