@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cug.daijiaguanli.mapper.OrderMapper">
+
+    <select id="selectOrderInfoWithCondition" resultType="com.cug.daijiaguanli.enetity.order.OrderInfo">
+        SELECT * FROM order_info
+        WHERE 1 = 1
+        <if test="customerId != null">AND customer_id = #{customerId}</if>
+        <if test="driverId != null">AND driver_id = #{driverId}</if>
+        <if test="status != null">AND status = #{status}</if>
+        <if test="minAcceptTime != null">AND accept_time &gt;= #{minAcceptTime}</if>
+        <if test="maxAcceptTime != null">AND accept_time &lt;= #{maxAcceptTime}</if>
+        ORDER BY accept_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countOrderInfoWithCondition" resultType="long">
+        SELECT COUNT(*) FROM order_info
+        WHERE 1 = 1
+        <if test="customerId != null">AND customer_id = #{customerId}</if>
+        <if test="driverId != null">AND driver_id = #{driverId}</if>
+        <if test="status != null">AND status = #{status}</if>
+        <if test="minAcceptTime != null">AND accept_time &gt;= #{minAcceptTime}</if>
+        <if test="maxAcceptTime != null">AND accept_time &lt;= #{maxAcceptTime}</if>
+    </select>
+
+    <insert id="insertOrder" parameterType="com.cug.daijiaguanli.enetity.order.OrderInfo">
+        INSERT INTO order_info (
+            customer_id, order_no, start_location, start_point_longitude, start_point_latitude,
+            end_location, end_point_longitude, end_point_latitude, expect_distance, real_distance,
+            expect_amount, real_amount, favour_fee, driver_id, accept_time, arrive_time, start_service_time,
+            end_service_time, pay_time, cancel_rule_id, car_license, car_type, car_front_url, car_back_url,
+            transaction_id, status, remark
+        )
+        VALUES (
+                   #{customerId}, #{orderNo}, #{startLocation}, #{startPointLongitude}, #{startPointLatitude},
+                   #{endLocation}, #{endPointLongitude}, #{endPointLatitude}, #{expectDistance}, #{realDistance},
+                   #{expectAmount}, #{realAmount}, #{favourFee}, #{driverId}, #{acceptTime}, #{arriveTime},
+                   #{startServiceTime}, #{endServiceTime}, #{payTime}, #{cancelRuleId}, #{carLicense}, #{carType},
+                   #{carFrontUrl}, #{carBackUrl}, #{transactionId}, #{status}, #{remark}
+               )
+    </insert>
+
+    <update id="updateOrder" parameterType="com.cug.daijiaguanli.enetity.order.OrderInfo">
+        UPDATE order_info
+        SET status = #{status}, remark = #{remark}
+        WHERE order_no = #{orderNo}
+    </update>
+
+    <delete id="deleteOrder">
+        DELETE FROM order_info WHERE order_no = #{orderNo}
+    </delete>
+
+    <select id="selectByOrderNo" resultType="com.cug.daijiaguanli.enetity.order.OrderInfo">
+        SELECT * FROM order_info WHERE order_no = #{orderNo}
+    </select>
+
+</mapper>

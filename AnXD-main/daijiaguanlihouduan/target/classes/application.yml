@@ -1,0 +1,68 @@
+spring:
+    application:
+        name: daijiaguanli
+    datasource:
+        dynamic:
+            primary: coupon
+            strict: true
+            datasource:
+                coupon:
+                    driver-class-name: com.mysql.cj.jdbc.Driver
+                    url: jdbc:mysql://192.168.5.128:3306/daijia_coupon?useSSL=false&serverTimezone=UTC
+                    username: root
+                    password: root
+                customer:
+                    driver-class-name: com.mysql.cj.jdbc.Driver
+                    url: jdbc:mysql://192.168.5.128:3306/daijia_customer?useSSL=false&serverTimezone=UTC
+                    username: root
+                    password: root
+                dispatch:
+                    driver-class-name: com.mysql.cj.jdbc.Driver
+                    url: jdbc:mysql://192.168.5.128:3306/daijia_dispatch?useSSL=false&serverTimezone=UTC
+                    username: root
+                    password: root
+                driver:
+                    driver-class-name: com.mysql.cj.jdbc.Driver
+                    url: jdbc:mysql://192.168.5.128:3306/daijia_driver?useSSL=false&serverTimezone=UTC
+                    username: root
+                    password: root
+                order:
+                    driver-class-name: com.mysql.cj.jdbc.Driver
+                    url: jdbc:mysql://192.168.5.128:3306/daijia_order?useSSL=false&serverTimezone=UTC
+                    username: root
+                    password: root
+                payment:
+                    driver-class-name: com.mysql.cj.jdbc.Driver
+                    url: jdbc:mysql://192.168.5.128:3306/daijia_payment?useSSL=false&serverTimezone=UTC
+                    username: root
+                    password: root
+                rule:
+                    driver-class-name: com.mysql.cj.jdbc.Driver
+                    url: jdbc:mysql://192.168.5.128:3306/daijia_rule?useSSL=false&serverTimezone=UTC
+                    username: root
+                    password: root
+                system:
+                    driver-class-name: com.mysql.cj.jdbc.Driver
+                    url: jdbc:mysql://192.168.5.128:3306/daijia_system?useSSL=false&serverTimezone=UTC
+                    username: root
+                    password: root
+            hikari:
+                max-lifetime: 1800000
+                maximum-pool-size: 10
+                minimum-idle: 5
+    data:
+        redis:
+            host: 192.168.5.128
+            port: 6379
+server:
+    port: 8080
+mybatis:
+    configuration:
+        map-underscore-to-camel-case: true
+    mapper-locations: classpath*:mapper/*.xml
+logging:
+    level:
+        root: debug
+        com.baomidou.dynamic.datasource: debug
+        org.springframework.boot: debug
+        org.mybatis: debug

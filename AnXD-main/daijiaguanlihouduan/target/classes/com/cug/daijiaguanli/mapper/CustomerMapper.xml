@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cug.daijiaguanli.mapper.CustomerMapper">
+    <!-- 根据用户名查询用户信息 -->
+    <select id="selectByUsername" resultType="com.cug.daijiaguanli.enetity.customer.CustomerInfo">
+        SELECT * FROM customer_info WHERE nickname = #{username}
+    </select>
+
+    <!-- 删除用户 -->
+    <delete id="deleteByUsername">
+        DELETE FROM customer_info WHERE nickname = #{username}
+    </delete>
+
+    <!-- 更新用户 -->
+    <update id="updateCustomerInfo">
+        UPDATE customer_info
+        SET
+            wx_open_id = #{wxOpenId},
+            gender = #{gender},
+            avatar_url = #{avatarUrl},
+            phone = #{phone},
+            status = #{status}
+        WHERE nickname = #{nickname}
+    </update>
+
+    <!-- 条件分页查询用户列表 -->
+    <select id="selectAllWithCondition" resultType="com.cug.daijiaguanli.enetity.customer.CustomerInfo">
+        SELECT * FROM customer_info
+        WHERE 1 = 1
+        <if test="nickname != null and nickname != ''">
+            AND nickname LIKE CONCAT('%', #{nickname}, '%')
+        </if>
+        <if test="gender != null">
+            AND gender = #{gender}
+        </if>
+        <if test="phone != null and phone != ''">
+            AND phone LIKE CONCAT('%', #{phone}, '%')
+        </if>
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+        ORDER BY nickname ASC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 条件查询总条数 -->
+    <select id="countAllWithCondition" resultType="long">
+        SELECT COUNT(*) FROM customer_info
+        WHERE 1 = 1
+        <if test="nickname != null and nickname != ''">
+            AND nickname LIKE CONCAT('%', #{nickname}, '%')
+        </if>
+        <if test="gender != null">
+            AND gender = #{gender}
+        </if>
+        <if test="phone != null and phone != ''">
+            AND phone LIKE CONCAT('%', #{phone}, '%')
+        </if>
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+    </select>
+
+    <!-- 获取用户最新登录日志 -->
+    <select id="selectLatestLogByCustomerId" resultType="com.cug.daijiaguanli.enetity.customer.CustomerLoginLog">
+        SELECT *
+        FROM customer_login_log
+        WHERE customer_id = #{customerId}
+        ORDER BY id DESC
+            LIMIT 1
+    </select>
+    <select id="selectById" resultType="com.cug.daijiaguanli.enetity.customer.CustomerInfo">
+        SELECT * FROM customer_info WHERE id = #{id}
+    </select>
+
+
+</mapper>

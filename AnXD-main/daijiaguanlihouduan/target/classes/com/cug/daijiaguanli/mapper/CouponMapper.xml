@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cug.daijiaguanli.mapper.CouponMapper">
+
+    <!-- 条件分页查询 -->
+    <select id="selectCouponInfoWithCondition" resultType="com.cug.daijiaguanli.enetity.coupon.CouponInfo">
+        SELECT * FROM coupon_info
+        WHERE 1 = 1
+        <if test="couponType != null">AND coupon_type = #{couponType}</if>
+        <if test="name != null and name != ''">AND name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test="amount != null">AND amount = #{amount}</if>
+        <if test="minDiscount != null">AND discount &gt;= #{minDiscount}</if>
+        <if test="maxDiscount != null">AND discount &lt;= #{maxDiscount}</if>
+        <if test="minConditionAmount != null">AND condition_amount &gt;= #{minConditionAmount}</if>
+        <if test="maxConditionAmount != null">AND condition_amount &lt;= #{maxConditionAmount}</if>
+        <if test="status != null">AND status = #{status}</if>
+        <if test="minPublishCount != null">AND publish_count &gt;= #{minPublishCount}</if>
+        <if test="maxPublishCount != null">AND publish_count &lt;= #{maxPublishCount}</if>
+        <if test="minPerLimit != null">AND per_limit &gt;= #{minPerLimit}</if>
+        <if test="maxPerLimit != null">AND per_limit &lt;= #{maxPerLimit}</if>
+        <if test="minUseCount != null">AND use_count &gt;= #{minUseCount}</if>
+        <if test="maxUseCount != null">AND use_count &lt;= #{maxUseCount}</if>
+        <if test="minReceiveCount != null">AND receive_count &gt;= #{minReceiveCount}</if>
+        <if test="maxReceiveCount != null">AND receive_count &lt;= #{maxReceiveCount}</if>
+        <if test="minExpireTime != null">AND expire_time &gt;= #{minExpireTime}</if>
+        <if test="maxExpireTime != null">AND expire_time &lt;= #{maxExpireTime}</if>
+        ORDER BY id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countCouponInfoWithCondition" resultType="long">
+        SELECT COUNT(*) FROM coupon_info
+        WHERE 1 = 1
+        <if test="couponType != null">AND coupon_type = #{couponType}</if>
+        <if test="name != null and name != ''">AND name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test="amount != null">AND amount = #{amount}</if>
+        <if test="minDiscount != null">AND discount &gt;= #{minDiscount}</if>
+        <if test="maxDiscount != null">AND discount &lt;= #{maxDiscount}</if>
+        <if test="minConditionAmount != null">AND condition_amount &gt;= #{minConditionAmount}</if>
+        <if test="maxConditionAmount != null">AND condition_amount &lt;= #{maxConditionAmount}</if>
+        <if test="status != null">AND status = #{status}</if>
+        <if test="minPublishCount != null">AND publish_count &gt;= #{minPublishCount}</if>
+        <if test="maxPublishCount != null">AND publish_count &lt;= #{maxPublishCount}</if>
+        <if test="minPerLimit != null">AND per_limit &gt;= #{minPerLimit}</if>
+        <if test="maxPerLimit != null">AND per_limit &lt;= #{maxPerLimit}</if>
+        <if test="minUseCount != null">AND use_count &gt;= #{minUseCount}</if>
+        <if test="maxUseCount != null">AND use_count &lt;= #{maxUseCount}</if>
+        <if test="minReceiveCount != null">AND receive_count &gt;= #{minReceiveCount}</if>
+        <if test="maxReceiveCount != null">AND receive_count &lt;= #{maxReceiveCount}</if>
+        <if test="minExpireTime != null">AND expire_time &gt;= #{minExpireTime}</if>
+        <if test="maxExpireTime != null">AND expire_time &lt;= #{maxExpireTime}</if>
+    </select>
+
+    <!-- 插入优惠券 -->
+    <insert id="insertCouponInfo" parameterType="com.cug.daijiaguanli.enetity.coupon.CouponInfo">
+        INSERT INTO coupon_info (
+            coupon_type, name, amount, discount, condition_amount,
+            publish_count, per_limit, use_count, receive_count, expire_time,
+            description, status
+        )
+        VALUES (
+                   #{couponType}, #{name}, #{amount}, #{discount}, #{conditionAmount},
+                   #{publishCount}, #{perLimit}, #{useCount}, #{receiveCount}, #{expireTime},
+                   #{description}, #{status}
+               )
+    </insert>
+
+    <!-- 更新优惠券 -->
+    <update id="updateCouponInfo" parameterType="com.cug.daijiaguanli.enetity.coupon.CouponInfo">
+        UPDATE coupon_info
+        SET coupon_type = #{couponType},
+            name = #{name},
+            amount = #{amount},
+            discount = #{discount},
+            condition_amount = #{conditionAmount},
+            publish_count = #{publishCount},
+            per_limit = #{perLimit},
+            use_count = #{useCount},
+            receive_count = #{receiveCount},
+            expire_time = #{expireTime},
+            description = #{description},
+            status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除优惠券 -->
+    <delete id="removeCouponInfo">
+        DELETE FROM coupon_info WHERE id = #{id}
+    </delete>
+
+    <!-- 根据名称查询 -->
+    <select id="selectByName" resultType="com.cug.daijiaguanli.enetity.coupon.CouponInfo">
+        SELECT * FROM coupon_info WHERE name = #{name}
+    </select>
+
+
+    <!-- 查询用户优惠券 -->
+    <select id="selectCustomerCouponWithCondition" resultType="com.cug.daijiaguanli.enetity.coupon.CustomerCoupon">
+        SELECT * FROM customer_coupon
+        WHERE 1 = 1
+        <if test="customerId != null">AND customer_id = #{customerId}</if>
+        <if test="orderId != null">AND order_id = #{orderId}</if>
+        <if test="status != null">AND status = #{status}</if>
+        ORDER BY receive_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countCustomerCouponWithCondition" resultType="long">
+        SELECT COUNT(*) FROM customer_coupon
+        WHERE 1 = 1
+        <if test="customerId != null">AND customer_id = #{customerId}</if>
+        <if test="orderId != null">AND order_id = #{orderId}</if>
+        <if test="status != null">AND status = #{status}</if>
+    </select>
+
+
+</mapper>

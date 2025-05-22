@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cug.daijiaguanli.mapper.OrderCommentMapper">
+
+    <insert id="insert" parameterType="com.cug.daijiaguanli.enetity.order.OrderComment">
+        INSERT INTO order_comment (order_id, driver_id, customer_id, rate, remark, status, instance_id)
+        VALUES (#{orderId}, #{driverId}, #{customerId}, #{rate}, #{remark}, #{status}, #{instanceId})
+    </insert>
+
+    <update id="update" parameterType="com.cug.daijiaguanli.enetity.order.OrderComment">
+        UPDATE order_comment
+        SET driver_id = #{driverId},
+            customer_id = #{customerId},
+            rate = #{rate},
+            remark = #{remark},
+            status = #{status},
+            instance_id = #{instanceId}
+        WHERE order_id = #{orderId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM order_comment WHERE order_id = #{orderId}
+    </delete>
+
+    <select id="selectByOrderId" resultType="com.cug.daijiaguanli.enetity.order.OrderComment">
+        SELECT * FROM order_comment WHERE order_id = #{orderId}
+    </select>
+
+    <select id="selectWithCondition" resultType="com.cug.daijiaguanli.enetity.order.OrderComment">
+        SELECT * FROM order_comment
+        WHERE 1 = 1
+        <if test="customerId != null">AND customer_id = #{customerId}</if>
+        <if test="driverId != null">AND driver_id = #{driverId}</if>
+        <if test="rate != null">AND rate = #{rate}</if>
+        <if test="status != null">AND status = #{status}</if>
+        ORDER BY order_id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countWithCondition" resultType="long">
+        SELECT COUNT(*) FROM order_comment
+        WHERE 1 = 1
+        <if test="customerId != null">AND customer_id = #{customerId}</if>
+        <if test="driverId != null">AND driver_id = #{driverId}</if>
+        <if test="rate != null">AND rate = #{rate}</if>
+        <if test="status != null">AND status = #{status}</if>
+    </select>
+
+</mapper>

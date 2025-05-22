@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cug.daijiaguanli.mapper.SysUserMapper">
+
+
+    <select id="findByUserName" resultType="com.cug.daijiaguanli.enetity.system.SysUser">
+        select * from sys_user where username = #{username}
+    </select>
+
+    <select id="selectAllWithCondition" resultType="com.cug.daijiaguanli.enetity.system.SysUser">
+        SELECT * FROM sys_user
+        WHERE 1 = 1
+        <if test="id != null and id != ''">AND id = #{id}</if>
+        <if test="username != null">AND username = #{username}</if>
+        <if test="name != null and name != ''">AND name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test="phone != null and phone != ''">AND phone LIKE CONCAT('%', #{phone}, '%')</if>
+        <if test="deptId != null and deptId != ''">AND dept_id = #{deptId}</if>
+        <if test="postId != null and postId != ''">AND post_id = #{postId}</if>
+        <if test="status != null and status != ''">AND status = #{status}</if>
+        <if test="postName != null and postName != ''">AND post_name LIKE CONCAT('%', #{postName}, '%')</if>
+        <if test="deptName != null and deptName != ''">AND dept_name LIKE CONCAT('%', #{deptName}, '%')</if>
+        ORDER BY id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countAllWithCondition" resultType="long">
+        SELECT COUNT(*) FROM sys_user
+        WHERE 1 = 1
+        <if test="id != null and id != ''">AND id = #{id}</if>
+        <if test="username != null">AND username = #{username}</if>
+        <if test="name != null and name != ''">AND name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test="phone != null and phone != ''">AND phone LIKE CONCAT('%', #{phone}, '%')</if>
+        <if test="deptId != null and deptId != ''">AND dept_id = #{deptId}</if>
+        <if test="postId != null and postId != ''">AND post_id = #{postId}</if>
+        <if test="status != null and status != ''">AND status = #{status}</if>
+        <if test="postName != null and postName != ''">AND post_name LIKE CONCAT('%', #{postName}, '%')</if>
+        <if test="deptName != null and deptName != ''">AND dept_name LIKE CONCAT('%', #{deptName}, '%')</if>
+    </select>
+
+    <select id="selectById" resultType="com.cug.daijiaguanli.enetity.system.SysUser">
+        SELECT * FROM sys_user WHERE id = #{id}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO sys_user(id, username, password, name, phone, head_url, dept_id, post_id, description, status)
+        VALUES (#{id}, #{username}, #{password}, #{name}, #{phone}, #{headUrl}, #{deptId}, #{postId}, #{description}, #{status})
+    </insert>
+
+    <update id="update">
+        UPDATE sys_user
+        SET username = #{username}, password = #{password}, name = #{name}, phone = #{phone},
+            head_url = #{headUrl}, dept_id = #{deptId}, post_id = #{postId},
+            description = #{description}, status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM sys_user WHERE id = #{id}
+    </delete>
+
+
+
+    <select id="selectLoginLogsByCondition" resultType="com.cug.daijiaguanli.enetity.system.SysLoginLog">
+        SELECT * FROM sys_login_log
+        WHERE 1 = 1
+        <if test="username != null and username != ''">
+            AND username = #{username}
+        </if>
+        <if test="minAccessTime != null">
+            AND access_time &gt;= #{minAccessTime}
+        </if>
+        <if test="maxAccessTime != null">
+            AND access_time &lt;= #{maxAccessTime}
+        </if>
+        ORDER BY access_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countLoginLogsByCondition" resultType="long">
+        SELECT COUNT(*) FROM sys_login_log
+        WHERE 1 = 1
+        <if test="username != null and username != ''">
+            AND username = #{username}
+        </if>
+        <if test="minAccessTime != null">
+            AND access_time &gt;= #{minAccessTime}
+        </if>
+        <if test="maxAccessTime != null">
+            AND access_time &lt;= #{maxAccessTime}
+        </if>
+    </select>
+
+
+    <select id="selectOperLogsByCondition" resultType="com.cug.daijiaguanli.enetity.system.SysOperLog">
+        SELECT * FROM sys_oper_log
+        WHERE 1 = 1
+        <if test="operName != null and operName != ''">
+            AND oper_name = #{operName}
+        </if>
+        <if test="deptName != null and deptName != ''">
+            AND dept_name = #{deptName}
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="operatorType != null and operatorType != ''">
+            AND operator_type = #{operatorType}
+        </if>
+        <if test="businessType != null and businessType != ''">
+            AND business_type = #{businessType}
+        </if>
+        <if test="requestMethod != null and requestMethod != ''">
+            AND request_method = #{requestMethod}
+        </if>
+        <if test="minOperTime != null">
+            AND oper_time &gt;= #{minOperTime}
+        </if>
+        <if test="maxOperTime != null">
+            AND oper_time &lt;= #{maxOperTime}
+        </if>
+        ORDER BY oper_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countOperLogsByCondition" resultType="long">
+        SELECT COUNT(*) FROM sys_oper_log
+        WHERE 1 = 1
+        <if test="operName != null and operName != ''">
+            AND oper_name = #{operName}
+        </if>
+        <if test="deptName != null and deptName != ''">
+            AND dept_name = #{deptName}
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="operatorType != null and operatorType != ''">
+            AND operator_type = #{operatorType}
+        </if>
+        <if test="businessType != null and businessType != ''">
+            AND business_type = #{businessType}
+        </if>
+        <if test="requestMethod != null and requestMethod != ''">
+            AND request_method = #{requestMethod}
+        </if>
+        <if test="minOperTime != null">
+            AND oper_time &gt;= #{minOperTime}
+        </if>
+        <if test="maxOperTime != null">
+            AND oper_time &lt;= #{maxOperTime}
+        </if>
+    </select>
+
+</mapper>

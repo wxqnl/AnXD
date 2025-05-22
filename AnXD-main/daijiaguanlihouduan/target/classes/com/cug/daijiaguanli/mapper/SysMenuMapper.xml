@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cug.daijiaguanli.mapper.SysMenuMapper">
+
+    <select id="selectAll" resultType="com.cug.daijiaguanli.enetity.system.SysMenu">
+        SELECT id, parent_id, name, type, path, component, perms, icon, sort_value,
+               status, active_menu, is_hide
+        FROM sys_menu
+        ORDER BY sort_value ASC
+    </select>
+
+    <insert id="insert" parameterType="com.cug.daijiaguanli.enetity.system.SysMenu">
+        INSERT INTO sys_menu (parent_id, name, type, path, component, perms, icon,
+                              sort_value, status, active_menu, is_hide)
+        VALUES (#{parentId}, #{name}, #{type}, #{path}, #{component}, #{perms}, #{icon},
+                #{sortValue}, #{status}, #{activeMenu}, #{isHide})
+    </insert>
+
+    <update id="update" parameterType="com.cug.daijiaguanli.enetity.system.SysMenu">
+        UPDATE sys_menu
+        SET parent_id = #{parentId},
+            name = #{name},
+            type = #{type},
+            path = #{path},
+            component = #{component},
+            perms = #{perms},
+            icon = #{icon},
+            sort_value = #{sortValue},
+            status = #{status},
+            active_menu = #{activeMenu},
+            is_hide = #{isHide}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM sys_menu WHERE id = #{id}
+    </delete>
+
+    <select id="selectById" resultType="com.cug.daijiaguanli.enetity.system.SysMenu">
+        SELECT * FROM sys_menu WHERE id = #{id}
+    </select>
+
+</mapper>

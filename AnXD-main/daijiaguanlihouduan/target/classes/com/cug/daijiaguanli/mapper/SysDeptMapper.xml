@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cug.daijiaguanli.mapper.SysDeptMapper">
+
+    <select id="selectAll" resultType="com.cug.daijiaguanli.enetity.system.SysDept">
+        SELECT id, name, parent_id, tree_path, sort_value, leader, phone, status
+        FROM sys_dept
+        ORDER BY sort_value ASC
+    </select>
+
+    <insert id="insert" parameterType="com.cug.daijiaguanli.enetity.system.SysDept">
+        INSERT INTO sys_dept (name, parent_id, tree_path, sort_value, leader, phone, status)
+        VALUES (#{name}, #{parentId}, #{treePath}, #{sortValue}, #{leader}, #{phone}, #{status})
+    </insert>
+
+    <update id="update" parameterType="com.cug.daijiaguanli.enetity.system.SysDept">
+        UPDATE sys_dept
+        SET name = #{name},
+            parent_id = #{parentId},
+            tree_path = #{treePath},
+            sort_value = #{sortValue},
+            leader = #{leader},
+            phone = #{phone},
+            status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM sys_dept WHERE id = #{id}
+    </delete>
+
+    <select id="selectById" resultType="com.cug.daijiaguanli.enetity.system.SysDept">
+        SELECT * FROM sys_dept WHERE id = #{id}
+    </select>
+
+    <select id="selectAllWithCondition" resultType="com.cug.daijiaguanli.enetity.system.SysDept">
+        select *from sys_dept
+        where 1=1
+        <if test="name != null and name != ''">
+            and name like concat('%',#{name},'%')
+        </if>
+        <if test="parentId != null">
+            and parent_id = #{parentId}
+        </if>
+        <if test="children != null and children != ''">
+            and children = #{children}
+        </if>
+        <if test="leader != null and leader != ''">
+            and leader = #{leader}
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        order by sort_value asc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="countAllWithCondition" resultType="long">
+        select count(*) from sys_dept
+        where 1=1
+        <if test="name != null and name != ''">
+            and name like concat('%',#{name},'%')
+        </if>
+        <if test="parentId != null">
+            and parent_id = #{parentId}
+        </if>
+        <if test="children != null and children != ''">
+            and children = #{children}
+        </if>
+        <if test="leader != null and leader != ''">
+            and leader = #{leader}
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+
+    </select>
+
+</mapper>
